@@ -57,7 +57,6 @@ if __name__ == '__main__':
     orgs = process_people(orgs, groups, instituts)
 
     for key in volunteers.keys():
-        print(key)
         new_doc = Documents()
         new_doc.set_event_name(settings['event'])
         new_doc.set_data(settings['date'])
@@ -67,12 +66,8 @@ if __name__ == '__main__':
             new_doc.add_fio(human)
         new_doc.make_thanks(settings['output_files']['volunteers'], settings['templates']['volunteers_thanks'],
                             'Финист')
-        for org in orgs[key]:
-            new_doc.add_fio(org)
-        new_doc.make_exemption(settings['output_files']['exemptions'], settings['templates']['exemptions'], 'Финист')
 
     for key in orgs.keys():
-        print(key)
         new_doc = Documents()
         new_doc.set_event_name(settings['event'])
         new_doc.set_data(settings['date'])
@@ -81,3 +76,16 @@ if __name__ == '__main__':
         for human in orgs[key]:
             new_doc.add_fio(human)
         new_doc.make_thanks(settings['output_files']['orgs'], settings['templates']['orgs_thanks'], 'Финист')
+
+    for key in volunteers.keys():
+        volunteers[key] += orgs[key]
+        volunteers[key] = sorted(volunteers[key], key=lambda k: k[0])
+    for key in volunteers.keys():
+        new_doc = Documents()
+        new_doc.set_event_name(settings['event'])
+        new_doc.set_data(settings['date'])
+        new_doc.set_institute(key, instituts[key]['director']['post'], instituts[key]['director']['name'])
+        new_doc.set_signature(settings['signature']['post'], settings['signature']['person'])
+        for human in volunteers[key]:
+            new_doc.add_fio(human)
+        new_doc.make_exemption(settings['output_files']['exemptions'], settings['templates']['exemptions'], 'Финист')

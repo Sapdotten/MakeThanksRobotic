@@ -55,7 +55,8 @@ class Documents:
             j.text = j.text.replace("date", self.date)
         # добавление подписи
         sign = self.exemption_doc.tables[1]
-        sign.cell(0, 0).text = self.signature_post
+        p = sign.cell(0, 0).add_paragraph('\n'+self.signature_post)
+        p.alignment = WD_ALIGN_PARAGRAPH.LEFT
         p = sign.cell(0, 1).add_paragraph(self.signature_name)
         p.alignment = WD_ALIGN_PARAGRAPH.RIGHT
         # Заполнение таблицы
@@ -89,7 +90,8 @@ class Documents:
         i = 0
         # добавление подписи
         sign = self.thanks_doc.tables[3]
-        sign.cell(0, 0).text = self.signature_post
+        p = sign.cell(0, 0).add_paragraph(self.signature_post)
+        p.alignment = WD_ALIGN_PARAGRAPH.LEFT
         p = sign.cell(0, 1).add_paragraph(self.signature_name)
         p.alignment = WD_ALIGN_PARAGRAPH.RIGHT
 
