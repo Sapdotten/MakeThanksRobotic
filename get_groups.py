@@ -26,3 +26,5 @@ if __name__ == "__main__":
 
     with open("parsed_groups.json", "w", encoding="UTF-8") as file:
         json.dump(data, file, ensure_ascii=False)
+
+
