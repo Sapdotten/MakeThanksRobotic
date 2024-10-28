@@ -12,13 +12,13 @@ class Documents:
     _font_size = 14
 
     def __init__(self):
-        self.date = 'date'
-        self.event_name = 'event name'
+        self.date = 'c 1 по 30 декабря'
+        self.event_name = 'Название мероприятия'
         self.institut_name = 'institut name'
         self.director_name = 'director name'
         self.fios = []
-        self.signature_post = 'Post of person'
-        self.signature_name = 'person'
+        self.signature_post = 'Должность'
+        self.signature_name = 'Фамилия И.О.'
 
     def set_data(self, date: str):
         self.date = date
