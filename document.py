@@ -108,4 +108,4 @@ class Documents:
         style.font.name = self._font_style
         style.font.size = Pt(self._font_size)
         self._add_gatitude_content()
-        self.thanks_doc.save(f"./{dir}/Благодарность_{file_name}_{self.institut_name}.docx")
+        self.thanks_doc.save(f"{dir}/Благодарность_{file_name}_{self.institut_name}.docx")

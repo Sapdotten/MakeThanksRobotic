@@ -21,6 +21,7 @@ from PyQt5.QtCore import QCoreApplication, Qt, QRect, QSize
 from PyQt5.QtGui import QIcon, QFont, QColor, QMovie
 
 from document import Documents
+import utils
 
 
 class AppTheme:
@@ -39,8 +40,8 @@ class AppTheme:
 
     button_border_radius = 5
 
-    button_text_size = 20
-    label_text_size = 20
+    button_text_size = 15
+    label_text_size = 15
     plain_text_size = 14
     hint_text_size = 15
 
@@ -151,7 +152,6 @@ class Window(QMainWindow):
         """
         widget = QWidget()
         main_vbox = QVBoxLayout()
-        
 
         create_gratitude_org_button = self.create_button(
             "Создать благодарность за организацию",
@@ -267,7 +267,9 @@ class Window(QMainWindow):
         self.init_create_docs_window(doc)
 
     def make_gratitude_org(self, doc: Documents):
-        pass
+        utils.MakeDocs.make_thanks_org(
+            doc, self.result_path, self.src_table
+        )
 
     def make_gratitude_help(self, doc: Documents):
         pass
@@ -283,16 +285,16 @@ class Window(QMainWindow):
         button = QPushButton(text)
         button.clicked.connect(func)
         button.resize(button.minimumSizeHint())
-        button.setStyleSheet(
-            f"""
-                             background-color: {button_color};
-                             color: {AppTheme.button_text_color};
-                             font-size: {AppTheme.button_text_size}px;
-                             padding: 10px 10px 10px 10px;
-                             margin: 7px 7px 7px 7px;
-                             border-radius: {AppTheme.button_border_radius}px;
-                             """
-        )
+        # button.setStyleSheet(
+        #     f"""
+        #                      background-color: {button_color};
+        #                      color: {AppTheme.button_text_color};
+        #                      font-size: {AppTheme.button_text_size}px;
+        #                      padding: 10px 10px 10px 10px;
+        #                      margin: 7px 7px 7px 7px;
+        #                      border-radius: {AppTheme.button_border_radius}px;
+        #                      """
+        # )
         button.setFont(QFont(AppTheme.button_text_font, AppTheme.button_text_size))
         return button
 
