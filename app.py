@@ -25,14 +25,14 @@ import utils
 
 
 class AppTheme:
-    main_color = "white"
-    label_text_color = "black"
-    plain_text_color = "gray"
-    button_color = "black"
-    button_text_color = "white"
-    accent_color = "red"
-    alert_color = "red"
-    interface_color = "gray"
+    main_color = "#f5f5f5"
+    label_text_color = "#333333"
+    plain_text_color = "#828282"
+    button_color = "#27ae61"
+    button_text_color = "#f5f5f5"
+    accent_color = "#2f80ec"
+    alert_color = "#eb5757"
+    interface_color = "#828282"
 
     label_text_font = "Consolas"
     plain_text_font = "Times New Roman"
@@ -51,7 +51,7 @@ class Window(QMainWindow):
         super().__init__()
 
         self.setWindowTitle("Генератор документов")
-        self.init_main_menu()
+        self.init_get_event_window()
 
     def init_main_menu(self):
         """
@@ -130,13 +130,12 @@ class Window(QMainWindow):
 
         bottom_hbox_with_buttons = QHBoxLayout()
         bottom_hbox_with_buttons.addWidget(back_create_event_button)
-        bottom_hbox_with_buttons.stretch(1)
         bottom_hbox_with_buttons.addWidget(next_create_event_button)
 
         main_vbox.addLayout(upper_vbox)
         main_vbox.addLayout(bottom_hbox_with_buttons)
-        self.setCentralWidget(widget)
         self.adjustSize()
+        self.setCentralWidget(widget)
         self.show()
 
     def init_create_docs_window(self, doc: Documents):
@@ -151,21 +150,26 @@ class Window(QMainWindow):
 
         path_to_src_label = self.create_label("Укажите путь к таблице с людьми")
         set_path_to_src_button = self.create_button(
-            "Указать путь", self.set_path_to_src_action
+            "Указать путь", self.set_path_to_src_action, AppTheme.accent_color
         )
-        self.chosen_path_to_src_label = self.create_label("Путь к файлу...", AppTheme.interface_color)
+        self.chosen_path_to_src_label = self.create_label(
+            "Путь к файлу...", AppTheme.interface_color
+        )
         path_note_label = self.create_label(
             """Обратите внимание, что в таблице должен быть один лист, на котором:
 1) В первом столбце записаны ФИО студентов
-2) Во втором столбце указаны номера группы в формате 0000-000000D""", AppTheme.alert_color
+2) Во втором столбце указаны номера группы в формате 0000-000000D""",
+            AppTheme.alert_color,
         )
         set_path_to_result_label = self.create_label(
             "Укажите папку, куда сохранить сгенерированные документы"
         )
         set_path_to_result_button = self.create_button(
-            "Указать путь", self.set_path_to_result_action
+            "Указать путь", self.set_path_to_result_action, AppTheme.accent_color
         )
-        self.chosen_path_to_result_label = self.create_label("Путь к файлу...", AppTheme.interface_color)
+        self.chosen_path_to_result_label = self.create_label(
+            "Путь к папке...", AppTheme.interface_color
+        )
 
         create_gratitude_org_button = self.create_button(
             "Создать благодарность за организацию",
@@ -179,7 +183,7 @@ class Window(QMainWindow):
             "Создать освобождения", lambda x: self.make_exemption(doc)
         )
         create_docs_back_button = self.create_button(
-            "Назад", lambda x: self.create_docs_back_action(doc)
+            "Назад", lambda x: self.create_docs_back_action(doc), AppTheme.alert_color
         )
         main_vbox.addStretch(1)
         main_vbox.addWidget(path_to_src_label)
@@ -202,53 +206,6 @@ class Window(QMainWindow):
         self.adjustSize()
         self.show()
 
-    def init_get_paths_window(self, doc: Documents, next_step: callable):
-        """
-        Меню с выбором путей до:
-        - таблицы с людьми
-        - папки, куда будут сохраненены сгенерированные доки
-        Финальная кнопка для создания документа
-        """
-        widget = QWidget()
-
-        main_vbox = QVBoxLayout(widget)
-        path_to_src_label = self.create_label("Укажите путь к таблице с людьми")
-        set_path_to_src_button = self.create_button(
-            "Указать путь", self.set_path_to_src_action
-        )
-        self.chosen_path_to_src_label = self.create_label("Путь к файлу...")
-        path_note_label = self.create_label(
-            """Обратите внимание, что в таблице должен быть один лист, на котором:
-1) В первом столбце записаны ФИО студентов
-2) Во втором столбце указаны номера группы в формате 0000-000000D""", "red"
-        )
-        set_path_to_result_label = self.create_label(
-            "Укажите папку, куда сохранить сгенерированные документы"
-        )
-        set_path_to_result_button = self.create_button(
-            "Указать путь", self.set_path_to_result_action
-        )
-        self.chosen_path_to_result_label = self.create_label("Путь к файлу...")
-        get_paths_back_button = self.create_button(
-            "Назад", lambda x: self.get_paths_back_action(doc)
-        )
-        get_paths_next_button = self.create_button("Сгенерировать документ!", next_step)
-        main_vbox.addWidget(path_to_src_label)
-        main_vbox.addWidget(set_path_to_src_button)
-        main_vbox.addWidget(self.chosen_path_to_src_label)
-        main_vbox.addWidget(path_note_label)
-        main_vbox.addWidget(set_path_to_result_label)
-        main_vbox.addWidget(set_path_to_result_button)
-        main_vbox.addWidget(self.chosen_path_to_result_label)
-        main_vbox.addWidget(get_paths_back_button)
-        main_vbox.addWidget(get_paths_next_button)
-
-        self.setCentralWidget(widget)
-        self.adjustSize()
-        self.show()
-
-    def check_data_action(self):
-        pass
 
     def create_docs_action(self):
         self.init_get_event_window()
@@ -295,23 +252,20 @@ class Window(QMainWindow):
         self.init_create_docs_window(doc)
 
     def make_gratitude_org(self, doc: Documents):
-        utils.MakeDocs.make_thank_org(
-            doc, self.result_path, self.src_table
-        )
+        utils.MakeDocs.make_thank_org(doc, self.result_path, self.src_table)
+        self.show_success_message()
 
     def make_gratitude_help(self, doc: Documents):
-        utils.MakeDocs.make_thank_help(
-            doc, self.result_path, self.src_table
-        )
+        utils.MakeDocs.make_thank_help(doc, self.result_path, self.src_table)
+        self.show_success_message()
 
     def make_exemption(self, doc: Documents):
-        utils.MakeDocs.make_exemption(
-            doc, self.result_path, self.src_table
-        )
+        utils.MakeDocs.make_exemption(doc, self.result_path, self.src_table)
+        self.show_success_message()
 
     def create_button(
         self, text: str, func: callable, button_color=None
-    ) -> QPushButton:
+    ) -> QPushButton: 
         if button_color is None:
             button_color = AppTheme.button_color
         button = QPushButton(text)
@@ -345,6 +299,15 @@ class Window(QMainWindow):
         plain_text.setFont(QFont(AppTheme.plain_text_font, AppTheme.plain_text_size))
         plain_text.setStyleSheet(f"color: {AppTheme.plain_text_color};")
         return plain_text
+    
+    def show_success_message(self):
+        # Создание сообщения об успехе
+        msg = QMessageBox()
+        msg.setIcon(QMessageBox.Information)
+        msg.setText("Операция выполнена успешно!")
+        msg.setWindowTitle("Успех")
+        msg.setStandardButtons(QMessageBox.Ok)
+        msg.exec_()
 
 
 if __name__ == "__main__":
