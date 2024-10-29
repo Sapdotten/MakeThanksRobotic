@@ -3,6 +3,9 @@ import json
 from document import Documents
 
 
+
+
+
 def get_table_data(xlsx_file: str) -> pd.DataFrame:
     """
     Извлекает данные из указанной таблицы в файла Excel.

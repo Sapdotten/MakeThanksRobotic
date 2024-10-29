@@ -20,27 +20,6 @@ class Documents:
         self.signature_post = 'Должность'
         self.signature_name = 'Фамилия И.О.'
 
-    def set_data(self, date: str):
-        self.date = date
-
-    def set_event_name(self, event_name: str):
-        self.event_name = event_name
-
-    def set_institute(self, institut_name: str, director_post: str, director_name: str):
-        self.institut_name = institut_name
-        self.director_name = director_name
-        self.director_post = director_post
-
-    def add_fios(self, fios: list[list[str]]):
-        self.fios = fios
-
-    def add_fio(self, fio: list[str]):
-        self.fios.append(fio)
-
-    def set_signature(self, post: str, name: str):
-        self.signature_post = post
-        self.signature_name = name
-
     def _add_exemption_content(self):
         # добавление института
         self.exemption_doc.paragraphs[1].add_run(self.institut_name)
@@ -76,7 +55,7 @@ class Documents:
         style.font.size = Pt(self._font_size)
         self._add_exemption_content()
         self.exemption_doc.save(
-            f"./{dir}/Освобождение {file_name}_{self.institut_name}.docx")
+            f"{dir}/{file_name}_{self.institut_name}.docx")
 
     def _add_gatitude_content(self):
         run = self.thanks_doc.paragraphs[3].add_run(self.institut_name)
@@ -108,4 +87,4 @@ class Documents:
         style.font.name = self._font_style
         style.font.size = Pt(self._font_size)
         self._add_gatitude_content()
-        self.thanks_doc.save(f"{dir}/Благодарность_{file_name}_{self.institut_name}.docx")
+        self.thanks_doc.save(f"{dir}/{file_name}_{self.institut_name}.docx")

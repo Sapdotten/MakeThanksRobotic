@@ -40,7 +40,7 @@ class AppTheme:
 
     button_border_radius = 5
 
-    button_text_size = 15
+    button_text_size = 17
     label_text_size = 15
     plain_text_size = 14
     hint_text_size = 15
@@ -62,21 +62,17 @@ class Window(QMainWindow):
         """
         widget = QWidget()
 
-        check_data_button = self.create_button(
-            "Проверить актуальность данных", self.check_data_action
-        )
         create_docs_button = self.create_button(
             "Создать документы по мероприятию", self.create_docs_action
         )
         get_contacts_button = self.create_button(
-            "Связаться с разработчиком", self.get_contacts_action
+            "Поблагодарить разработчиков", self.get_contacts_action
         )
 
         widget.setStyleSheet(f"background-color: {AppTheme.main_color};")
 
         main_vbox = QVBoxLayout(widget)
         main_vbox.addStretch(1)
-        main_vbox.addWidget(check_data_button)
         main_vbox.addWidget(create_docs_button)
         main_vbox.addWidget(get_contacts_button)
         main_vbox.addStretch(1)
@@ -153,20 +149,47 @@ class Window(QMainWindow):
         widget = QWidget()
         main_vbox = QVBoxLayout()
 
+        path_to_src_label = self.create_label("Укажите путь к таблице с людьми")
+        set_path_to_src_button = self.create_button(
+            "Указать путь", self.set_path_to_src_action
+        )
+        self.chosen_path_to_src_label = self.create_label("Путь к файлу...", AppTheme.interface_color)
+        path_note_label = self.create_label(
+            """Обратите внимание, что в таблице должен быть один лист, на котором:
+1) В первом столбце записаны ФИО студентов
+2) Во втором столбце указаны номера группы в формате 0000-000000D""", AppTheme.alert_color
+        )
+        set_path_to_result_label = self.create_label(
+            "Укажите папку, куда сохранить сгенерированные документы"
+        )
+        set_path_to_result_button = self.create_button(
+            "Указать путь", self.set_path_to_result_action
+        )
+        self.chosen_path_to_result_label = self.create_label("Путь к файлу...", AppTheme.interface_color)
+
         create_gratitude_org_button = self.create_button(
             "Создать благодарность за организацию",
-            lambda x: self.create_gratitude_org_action(doc),
+            lambda x: self.make_gratitude_org(doc),
         )
         create_gratitude_help_button = self.create_button(
             "Создать благодарность за помощь в организации",
-            lambda x: self.create_gratitude_help_action(doc),
+            lambda x: self.make_gratitude_help(doc),
         )
         create_release_button = self.create_button(
-            "Создать освобождения", lambda x: self.create_release_action(doc)
+            "Создать освобождения", lambda x: self.make_exemption(doc)
         )
         create_docs_back_button = self.create_button(
             "Назад", lambda x: self.create_docs_back_action(doc)
         )
+        main_vbox.addStretch(1)
+        main_vbox.addWidget(path_to_src_label)
+        main_vbox.addWidget(set_path_to_src_button)
+        main_vbox.addWidget(self.chosen_path_to_src_label)
+        main_vbox.addWidget(path_note_label)
+        main_vbox.addStretch(1)
+        main_vbox.addWidget(set_path_to_result_label)
+        main_vbox.addWidget(set_path_to_result_button)
+        main_vbox.addWidget(self.chosen_path_to_result_label)
         main_vbox.addStretch(1)
         main_vbox.addWidget(create_gratitude_org_button),
         main_vbox.addWidget(create_gratitude_help_button)
@@ -197,7 +220,7 @@ class Window(QMainWindow):
         path_note_label = self.create_label(
             """Обратите внимание, что в таблице должен быть один лист, на котором:
 1) В первом столбце записаны ФИО студентов
-2) Во втором столбце указаны номера группы в формате 0000-000000D"""
+2) Во втором столбце указаны номера группы в формате 0000-000000D""", "red"
         )
         set_path_to_result_label = self.create_label(
             "Укажите папку, куда сохранить сгенерированные документы"
@@ -234,6 +257,11 @@ class Window(QMainWindow):
         pass
 
     def next_create_event_action(self, doc: Documents):
+        """This method is called when the create_event_action is called .
+
+        Args:
+            doc (Documents): [description]
+        """
         doc.event_name = self.event_name_plain_text.toPlainText()
         doc.date = self.date_plain_text.toPlainText()
         doc.signature_name = self.signature_name_plain_text.toPlainText()
@@ -267,15 +295,19 @@ class Window(QMainWindow):
         self.init_create_docs_window(doc)
 
     def make_gratitude_org(self, doc: Documents):
-        utils.MakeDocs.make_thanks_org(
+        utils.MakeDocs.make_thank_org(
             doc, self.result_path, self.src_table
         )
 
     def make_gratitude_help(self, doc: Documents):
-        pass
+        utils.MakeDocs.make_thank_help(
+            doc, self.result_path, self.src_table
+        )
 
     def make_exemption(self, doc: Documents):
-        pass
+        utils.MakeDocs.make_exemption(
+            doc, self.result_path, self.src_table
+        )
 
     def create_button(
         self, text: str, func: callable, button_color=None
@@ -285,24 +317,26 @@ class Window(QMainWindow):
         button = QPushButton(text)
         button.clicked.connect(func)
         button.resize(button.minimumSizeHint())
-        # button.setStyleSheet(
-        #     f"""
-        #                      background-color: {button_color};
-        #                      color: {AppTheme.button_text_color};
-        #                      font-size: {AppTheme.button_text_size}px;
-        #                      padding: 10px 10px 10px 10px;
-        #                      margin: 7px 7px 7px 7px;
-        #                      border-radius: {AppTheme.button_border_radius}px;
-        #                      """
-        # )
+        button.setStyleSheet(
+            f"""
+                             background-color: {button_color};
+                             color: {AppTheme.button_text_color};
+                             font-size: {AppTheme.button_text_size}px;
+                             padding: 10px 10px 10px 10px;
+                             margin: 7px 7px 7px 7px;
+                             border-radius: {AppTheme.button_border_radius}px;
+                             """
+        )
         button.setFont(QFont(AppTheme.button_text_font, AppTheme.button_text_size))
         return button
 
-    def create_label(self, text: str) -> QLabel:
+    def create_label(self, text: str, text_color: str = None) -> QLabel:
+        if text_color is None:
+            text_color = AppTheme.label_text_color
         label = QLabel()
         label.setText(text)
         label.setFont(QFont(AppTheme.label_text_font, AppTheme.label_text_size))
-        label.setStyleSheet(f"color: {AppTheme.label_text_color};")
+        label.setStyleSheet(f"color: {text_color};")
         return label
 
     def create_plain_text_edit(self, text: str) -> QPlainTextEdit:
