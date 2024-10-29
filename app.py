@@ -10,15 +10,9 @@ from PyQt5.QtWidgets import (
     QVBoxLayout,
     QWidget,
     QMessageBox,
-    QScrollArea,
-    QSizePolicy,
-    QGraphicsDropShadowEffect,
-    QDesktopWidget,
-    QCheckBox,
     QPlainTextEdit,
 )
-from PyQt5.QtCore import QCoreApplication, Qt, QRect, QSize
-from PyQt5.QtGui import QIcon, QFont, QColor, QMovie
+from PyQt5.QtGui import QFont
 
 from document import Documents
 import utils
