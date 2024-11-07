@@ -20,7 +20,7 @@ import utils
 
 class AppTheme:
     main_color = "#f5f5f5"
-    label_text_color = "#333333"
+    label_text_color = "#0000ff"
     plain_text_color = "#828282"
     button_color = "#27ae61"
     button_text_color = "#f5f5f5"
