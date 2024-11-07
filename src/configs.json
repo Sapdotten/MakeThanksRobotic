@@ -1,5 +1,5 @@
 {
-    "gratitude_org_file_path": "media_files\\templates\\template_thanks_orgs.docx",
-    "gratitude_help_file_path": "media_files\\templates\\template_thanks_volunteers.docx",
-    "exemption_file_path": "media_files\\templates\\exemption.docx"
+    "gratitude_org_file_path": ["media_files", "templates", "template_thanks_orgs.docx"],
+    "gratitude_help_file_path": ["media_files", "templates", "template_thanks_volunteers.docx"],
+    "exemption_file_path": ["media_files", "templates", "exemption.docx"]
 }

@@ -1,4 +1,5 @@
 import json
+from pathlib import Path
 from document import Documents
 import pandas as pd
 
@@ -16,6 +17,13 @@ class FileManager:
         """
         with open(file, "r", encoding="UTF-8") as f:
             data = json.load(f)
+        return data
+
+    @classmethod
+    def get_paths_from_json(cls, file: str) -> dict:
+        with open(file, "r", encoding="UTF-8") as f:
+            data = json.load(f)
+            data = {key: str(Path(*path_parts)) for key, path_parts in data.items()}
         return data
 
     @classmethod
@@ -37,9 +45,9 @@ class FileManager:
 
 
 class MakeDocs:
-    CONFIGS_FILE = ".\\src\\configs.json"
-    INSTITUTS_FILE = ".\\src\\instituts.json"
-    GROUPS_FILE = ".\\src\\groups.json"
+    CONFIGS_FILE = Path("src") / "configs.json"
+    INSTITUTS_FILE = Path("src") / "instituts.json"
+    GROUPS_FILE = Path("src") / "groups.json"
 
     @classmethod
     def _process_students(cls, table: str) -> dict:
@@ -89,7 +97,7 @@ class MakeDocs:
 
     @classmethod
     def make_thank_org(cls, doc: Documents, dir: str, table: str):
-        files_paths = FileManager.read_json(cls.CONFIGS_FILE)
+        files_paths = FileManager.get_paths_from_json(cls.CONFIGS_FILE)
         instituts = FileManager.read_json(cls.INSTITUTS_FILE)
         students = cls._process_students(table)
 
@@ -110,7 +118,7 @@ class MakeDocs:
 
     @classmethod
     def make_thank_help(cls, doc: Documents, dir: str, table: str):
-        files_paths = FileManager.read_json(cls.CONFIGS_FILE)
+        files_paths = FileManager.get_paths_from_json(cls.CONFIGS_FILE)
         instituts = FileManager.read_json(cls.INSTITUTS_FILE)
         students = cls._process_students(table)
 
@@ -130,7 +138,7 @@ class MakeDocs:
 
     @classmethod
     def make_exemption(cls, doc: Documents, dir: str, table: str):
-        files_paths = FileManager.read_json(cls.CONFIGS_FILE)
+        files_paths = FileManager.get_paths_from_json(cls.CONFIGS_FILE)
         instituts = FileManager.read_json(cls.INSTITUTS_FILE)
         students = cls._process_students(table)
 
